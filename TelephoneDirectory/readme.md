@@ -101,13 +101,7 @@ This is a simple web-based phonebook application built with **HTML**, **CSS**, *
 └── README.md                # Documentation
 ```
 
----
 
-## **Future Plans**
-
-- Add user authentication for private phonebooks.
-- Include export/import options for JSON data.
-- Enable advanced search (e.g., partial matches).
 
 
 
