@@ -109,9 +109,7 @@ This is a simple web-based phonebook application built with **HTML**, **CSS**, *
 - Include export/import options for JSON data.
 - Enable advanced search (e.g., partial matches).
 
----
 
-## **Screenshots**
 
 
 
