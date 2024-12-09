@@ -77,7 +77,7 @@ This is a simple web-based phonebook application built with **HTML**, **CSS**, *
 
 5. Start the Flask server:
    ```bash
-   python app.py
+   python backEnd.py
    ```
 
 6. Open the application in your browser:
