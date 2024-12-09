@@ -1,10 +1,15 @@
 # Phonebook Management System
 
+![image](https://github.com/user-attachments/assets/0f455ddb-aa27-4bb3-bd85-ad70d2a2ee00)
+
+
 This is a simple web-based phonebook application built with **HTML**, **CSS**, **JavaScript**, and **Flask**. It allows you to manage records by adding, searching, updating, deleting, and calculating the age of individuals based on their birthdate.
 
 ---
 
 ## **Features**
+
+![image](https://github.com/user-attachments/assets/fe2d667a-03d8-4510-836e-6182a7c8545d)
 
 1. View all phonebook records in a neat table.
 2. Add a new record with:
