@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dark Theme Phonebook</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Dark Theme Phonebook</h1>
+    <div class="buttons">
+      <button id="load">Load Records</button>
+      <button id="add">Add Record</button>
+      <button id="search">Search Records</button>
+      <button id="delete">Delete Record</button>
+      <button id="update">Update Record</button>
+      <button id="age">Show Age</button>
+    </div>
+    <div id="message"></div>
+    <table id="records">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Surname</th>
+          <th>Phone</th>
+          <th>Birth Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    
+  </div>
+
+  <!-- Modal Structure -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="error-message" style="display: none; color: red; margin-bottom: 10px;"></div>
+<div id="success-message" style="display: none; color: green; margin-bottom: 10px;"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
