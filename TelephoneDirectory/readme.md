@@ -1,10 +1,15 @@
 # Phonebook Management System
 
+![image](https://github.com/user-attachments/assets/0f455ddb-aa27-4bb3-bd85-ad70d2a2ee00)
+
+
 This is a simple web-based phonebook application built with **HTML**, **CSS**, **JavaScript**, and **Flask**. It allows you to manage records by adding, searching, updating, deleting, and calculating the age of individuals based on their birthdate.
 
 ---
 
 ## **Features**
+
+![image](https://github.com/user-attachments/assets/fe2d667a-03d8-4510-836e-6182a7c8545d)
 
 1. View all phonebook records in a neat table.
 2. Add a new record with:
@@ -72,7 +77,7 @@ This is a simple web-based phonebook application built with **HTML**, **CSS**, *
 
 5. Start the Flask server:
    ```bash
-   python app.py
+   python backEnd.py
    ```
 
 6. Open the application in your browser:
@@ -96,17 +101,9 @@ This is a simple web-based phonebook application built with **HTML**, **CSS**, *
 └── README.md                # Documentation
 ```
 
----
 
-## **Future Plans**
 
-- Add user authentication for private phonebooks.
-- Include export/import options for JSON data.
-- Enable advanced search (e.g., partial matches).
 
----
-
-## **Screenshots**
 
 
 
