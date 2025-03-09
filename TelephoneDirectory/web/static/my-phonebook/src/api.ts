@@ -30,13 +30,13 @@ export async function makeRequest<T>(
 }
 
 export const getRecords = () =>
-  makeRequest<Record[]>('http://127.0.0.1:5000/api/v1/users', 'GET');
+  makeRequest<Record[]>('/api/v1/users', 'GET');
 
 export const addRecord = (record: Record) =>
-  makeRequest<Record>('http://127.0.0.1:5000/api/v1/add', 'POST', record);
+  makeRequest<Record>('/api/v1/add', 'POST', record);
 
 export const searchRecords = (criteria: Partial<Record>) =>
-  makeRequest<Record[]>('http://127.0.0.1:5000/api/v1/search', 'POST', criteria);
+  makeRequest<Record[]>('/api/v1/search', 'POST', criteria);
 
 export const updateRecord = (criteria: {
   Name: string;
@@ -44,13 +44,13 @@ export const updateRecord = (criteria: {
   Field: string;
   NewValue: string;
 }) =>
-  makeRequest<{ success: boolean }>('http://127.0.0.1:5000/api/v1/update', 'PUT', criteria);
+  makeRequest<{ success: boolean }>('/api/v1/update', 'PUT', criteria);
 
 export const deleteRecord = (criteria: Pick<Record, 'Name' | 'Surname'>) =>
-  makeRequest<{ success: boolean }>('http://127.0.0.1:5000/api/v1/delete', 'DELETE', criteria);
+  makeRequest<{ success: boolean }>('/api/v1/delete', 'DELETE', criteria);
 
 export const getAge = (criteria: Pick<Record, 'Name' | 'Surname'>) =>
-  makeRequest<{ age: number }>('http://127.0.0.1:5000/api/v1/age', 'POST', criteria);
+  makeRequest<{ age: number }>('/api/v1/age', 'POST', criteria);
 
 export function parseErrorMessage(error: any): string | null {
   try {

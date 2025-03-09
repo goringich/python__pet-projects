@@ -31,7 +31,7 @@ with app.app_context():
   db.drop_all()    # Внимание: удаляет все таблицы. Не используйте в production!
   db.create_all()
 
-@app.route("/api/v1/users", methods=["GET"])
+@app.route("/v1/users", methods=["GET"])
 def get_users():
   try:
     users = User.query.all()
@@ -39,7 +39,7 @@ def get_users():
   except Exception as e:
     return make_response(jsonify({'error': 'Failed to fetch users', 'details': str(e)}), 500)
 
-@app.route("/api/v1/add", methods=["POST"])
+@app.route("/v1/add", methods=["POST"])
 def add_user():
   try:
     data = request.get_json()
@@ -60,7 +60,7 @@ def add_user():
   except Exception as e:
     return make_response(jsonify({'error': 'Failed to add user', 'details': str(e)}), 500)
 
-@app.route("/api/v1/update", methods=["PUT"])
+@app.route("/v1/update", methods=["PUT"])
 def update_user():
   try:
     data = request.get_json()
@@ -103,7 +103,7 @@ def update_user():
     db.session.rollback()
     return make_response(jsonify({'error': 'Internal Server Error', 'details': str(e)}), 500)
 
-@app.route("/api/v1/delete", methods=["DELETE"])
+@app.route("/v1/delete", methods=["DELETE"])
 def delete_user():
   try:
     data = request.get_json()
@@ -128,7 +128,7 @@ def delete_user():
     db.session.rollback()
     return make_response(jsonify({'error': 'Internal Server Error', 'details': str(e)}), 500)
 
-@app.route("/api/v1/search", methods=["POST"])
+@app.route("/v1/search", methods=["POST"])
 def search_users():
   try:
     data = request.get_json()
@@ -146,21 +146,6 @@ def search_users():
   except Exception as e:
     return make_response(jsonify({'error': 'Failed to search users', 'details': str(e)}), 500)
 
-@app.route("/api/v1/age", methods=["POST"])
-def get_age():
-  try:
-    data = request.get_json()
-    if not data or "Name" not in data or "Surname" not in data:
-      return make_response(jsonify({'error': 'Name and Surname are required'}), 400)
-    user = User.query.filter_by(name=data["Name"], surname=data["Surname"]).first()
-    if not user or not user.birth_date:
-      return make_response(jsonify({'error': 'User or birth date not found'}), 404)
-    birth_date = datetime.strptime(user.birth_date, "%d.%m.%Y")
-    today = datetime.today()
-    age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
-    return make_response(jsonify({'age': age}), 200)
-  except Exception as e:
-    return make_response(jsonify({'error': 'Failed to calculate age', 'details': str(e)}), 500)
 
 if __name__ == "__main__":
   app.run(debug=True)
