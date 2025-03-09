@@ -174,9 +174,15 @@ const Phonebook: React.FC = () => {
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography 
+        variant="h4" 
+        align="center" 
+        gutterBottom
+        sx={{ color: 'primary.main' }}
+      >
         Dark Theme Phonebook
       </Typography>
+
       <Stack direction="row" spacing={2} justifyContent="center" sx={{ mb: 2 }}>
         <Button variant="contained" onClick={() => refetch()}>
           Load Records
@@ -199,7 +205,11 @@ const Phonebook: React.FC = () => {
       </Stack>
 
       {message && (
-        <Typography variant="body1" align="center" color={message.type === 'success' ? 'green' : 'red'}>
+        <Typography 
+          variant="body1" 
+          align="center" 
+          sx={{ color: message.type === 'success' ? 'green' : 'red' }}
+        >
           {message.text}
         </Typography>
       )}
