@@ -24,16 +24,17 @@ const PhonebookTable: React.FC<PhonebookTableProps> = ({
   deleteRecord,
 }) => {
   const records = searchResults || data;
+
   return (
-    <Paper sx={{ mt: 2 }}>
-      <Table>
+    <Paper sx={{ mt: 2, backgroundColor: 'background.paper', p: 2 }}>
+      <Table sx={{ color: 'text.primary' }}>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Surname</TableCell>
-            <TableCell>Phone</TableCell>
-            <TableCell>Birth Date</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell sx={{ color: 'text.primary' }}>Name</TableCell>
+            <TableCell sx={{ color: 'text.primary' }}>Surname</TableCell>
+            <TableCell sx={{ color: 'text.primary' }}>Phone</TableCell>
+            <TableCell sx={{ color: 'text.primary' }}>Birth Date</TableCell>
+            <TableCell sx={{ color: 'text.primary' }}>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -46,6 +47,8 @@ const PhonebookTable: React.FC<PhonebookTableProps> = ({
               <TableCell>
                 <Button
                   size="small"
+                  variant="outlined"
+                  sx={{ mr: 1 }}
                   onClick={() =>
                     openModal('update', {
                       Name: record.Name,
@@ -57,6 +60,7 @@ const PhonebookTable: React.FC<PhonebookTableProps> = ({
                 </Button>
                 <Button
                   size="small"
+                  variant="outlined"
                   color="error"
                   onClick={() => {
                     if (

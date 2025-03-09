@@ -13,7 +13,7 @@ class User(db.Model):
   __tablename__ = 'users'
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(80), nullable=False)
-  surname = db.Column(db.String(80), nullable=False)  # исправлено: добавлено поле surname
+  surname = db.Column(db.String(80), nullable=False) 
   phone = db.Column(db.String(80), unique=True, nullable=False)
   birth_date = db.Column(db.String(80), nullable=True)
 
@@ -26,9 +26,9 @@ class User(db.Model):
       'BirthDate': self.birth_date
     }
 
-# Для разработки: сбрасываем и пересоздаем таблицы при запуске
+
 with app.app_context():
-  db.drop_all()    # Внимание: удаляет все таблицы. Не используйте в production!
+  db.drop_all()    
   db.create_all()
 
 @app.route("/v1/users", methods=["GET"])
