@@ -1,0 +1,31 @@
+name: Telephone Directory Security
+
+on:
+  pull_request:
+    paths:
+      - "TelephoneDirectory/backend/app.py"
+      - ".github/workflows/telephone-directory-security.yml"
+  push:
+    branches:
+      - master
+    paths:
+      - "TelephoneDirectory/backend/app.py"
+      - ".github/workflows/telephone-directory-security.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Verify non-destructive production defaults
+        run: |
+          python -m py_compile TelephoneDirectory/backend/app.py
+          ! grep -q 'db.drop_all' TelephoneDirectory/backend/app.py
+          ! grep -q 'app.run(debug=True)' TelephoneDirectory/backend/app.py
+          grep -q 'app.run(debug=DEBUG_ENABLED)' TelephoneDirectory/backend/app.py
