@@ -1,19 +1,24 @@
-from flask import Flask, jsonify, request, make_response
+from datetime import datetime
+from os import environ
+
+from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from os import environ
-from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
 CORS(app)
 db = SQLAlchemy(app)
 
+IS_PRODUCTION = environ.get('APP_ENV', 'development').lower() == 'production'
+DEBUG_ENABLED = environ.get('FLASK_DEBUG', '').lower() in {'1', 'true', 'yes'} and not IS_PRODUCTION
+
+
 class User(db.Model):
   __tablename__ = 'users'
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(80), nullable=False)
-  surname = db.Column(db.String(80), nullable=False) 
+  surname = db.Column(db.String(80), nullable=False)
   phone = db.Column(db.String(80), unique=True, nullable=False)
   birth_date = db.Column(db.String(80), nullable=True)
 
@@ -27,17 +32,25 @@ class User(db.Model):
     }
 
 
+def internal_error(message, error):
+  payload = {'error': message}
+  if DEBUG_ENABLED:
+    payload['details'] = str(error)
+  return make_response(jsonify(payload), 500)
+
+
 with app.app_context():
-  db.drop_all()    
   db.create_all()
+
 
 @app.route("/api/v1/users", methods=["GET"])
 def get_users():
   try:
     users = User.query.all()
     return make_response(jsonify([user.json() for user in users]), 200)
-  except Exception as e:
-    return make_response(jsonify({'error': 'Failed to fetch users', 'details': str(e)}), 500)
+  except Exception as error:
+    return internal_error('Failed to fetch users', error)
+
 
 @app.route("/api/v1/add", methods=["POST"])
 def add_user():
@@ -57,8 +70,10 @@ def add_user():
     db.session.add(new_user)
     db.session.commit()
     return make_response(jsonify({'message': 'User created successfully'}), 201)
-  except Exception as e:
-    return make_response(jsonify({'error': 'Failed to add user', 'details': str(e)}), 500)
+  except Exception as error:
+    db.session.rollback()
+    return internal_error('Failed to add user', error)
+
 
 @app.route("/api/v1/update", methods=["PUT"])
 def update_user():
@@ -69,7 +84,7 @@ def update_user():
 
     user = None
     if "id" in data:
-      user = User.query.get(data["id"])
+      user = db.session.get(User, data["id"])
     elif "Phone" in data:
       user = User.query.filter_by(phone=data["Phone"]).first()
     elif "Name" in data and "Surname" in data:
@@ -80,7 +95,7 @@ def update_user():
 
     field = data.get("Field")
     new_value = data.get("NewValue")
-    if not field or not new_value:
+    if not field or new_value is None:
       return make_response(jsonify({'error': 'Field and NewValue are required for update'}), 400)
 
     if field == "Name":
@@ -99,9 +114,10 @@ def update_user():
 
     db.session.commit()
     return make_response(jsonify({'message': 'User updated successfully'}), 200)
-  except Exception as e:
+  except Exception as error:
     db.session.rollback()
-    return make_response(jsonify({'error': 'Internal Server Error', 'details': str(e)}), 500)
+    return internal_error('Internal Server Error', error)
+
 
 @app.route("/api/v1/delete", methods=["DELETE"])
 def delete_user():
@@ -112,7 +128,7 @@ def delete_user():
 
     user = None
     if "id" in data:
-      user = User.query.get(data["id"])
+      user = db.session.get(User, data["id"])
     elif "Phone" in data:
       user = User.query.filter_by(phone=data["Phone"]).first()
     elif "Name" in data and "Surname" in data:
@@ -124,27 +140,29 @@ def delete_user():
     db.session.delete(user)
     db.session.commit()
     return make_response(jsonify({'message': 'User deleted successfully'}), 200)
-  except Exception as e:
+  except Exception as error:
     db.session.rollback()
-    return make_response(jsonify({'error': 'Internal Server Error', 'details': str(e)}), 500)
+    return internal_error('Internal Server Error', error)
+
 
 @app.route("/api/v1/search", methods=["POST"])
 def search_users():
   try:
-    data = request.get_json()
+    data = request.get_json() or {}
     query = User.query
-    if "Name" in data and data["Name"]:
+    if data.get("Name"):
       query = query.filter(User.name.ilike(f"%{data['Name']}%"))
-    if "Surname" in data and data["Surname"]:
+    if data.get("Surname"):
       query = query.filter(User.surname.ilike(f"%{data['Surname']}%"))
-    if "Phone" in data and data["Phone"]:
+    if data.get("Phone"):
       query = query.filter(User.phone.ilike(f"%{data['Phone']}%"))
-    if "BirthDate" in data and data["BirthDate"]:
+    if data.get("BirthDate"):
       query = query.filter(User.birth_date.ilike(f"%{data['BirthDate']}%"))
     users = query.all()
     return make_response(jsonify([user.json() for user in users]), 200)
-  except Exception as e:
-    return make_response(jsonify({'error': 'Failed to search users', 'details': str(e)}), 500)
+  except Exception as error:
+    return internal_error('Failed to search users', error)
+
 
 @app.route("/api/v1/age", methods=["POST"])
 def get_age():
@@ -159,8 +177,9 @@ def get_age():
     today = datetime.today()
     age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
     return make_response(jsonify({'age': age}), 200)
-  except Exception as e:
-    return make_response(jsonify({'error': 'Failed to calculate age', 'details': str(e)}), 500)
+  except Exception as error:
+    return internal_error('Failed to calculate age', error)
+
 
 if __name__ == "__main__":
-  app.run(debug=True)
+  app.run(debug=DEBUG_ENABLED)
